@@ -29,9 +29,10 @@ const LoginPage = () => {
       data: user,
     })
       .then((res) => {
-        // console.log(res.data.token);
-        // console.log(res.data.user.id);
+        // res.data contain user object and token string.
         if (res.data.token) {
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("user-id", res.data.user.id);
           setIsAuthenticated(true);
           history.push("/my-incidents");
         }
