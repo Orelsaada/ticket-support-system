@@ -52,4 +52,14 @@ router.get("/user", auth, (req, res) => {
     .then((user) => res.json(user));
 });
 
+// POST /api/auth/isValidToken (Valid? user id : false)
+router.post("/isValidToken", (req, res) => {
+  try {
+    const decoded = jwt.verify(req.body.token, process.env.jwtSecret);
+    res.json(decoded.id);
+  } catch {
+    res.json(false);
+  }
+});
+
 module.exports = router;

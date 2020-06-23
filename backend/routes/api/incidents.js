@@ -26,9 +26,25 @@ router.post("/new", auth, (req, res) => {
 // GET /api/incidents
 router.get("/", auth, (req, res) => {
   Incident.find({ userId: req.user.id })
-    .select("-_id")
     .select("-__v")
     .then((incidents) => res.json(incidents));
+});
+
+// DELETE /api/incidents/delete
+router.delete("/delete", auth, (req, res) => {
+  Incident.findByIdAndDelete(req.body.id)
+    .then(() => res.json({ msg: "Incident deleted successfuly." }))
+    .catch((err) => res.json({ error: err }));
+});
+
+// POST /api/incidents/close
+router.post("/close", auth, (req, res) => {
+  Incident.findById(req.body.id)
+    .then((incident) => {
+      incident.status = "Closed";
+      incident.save(() => res.json({ msg: "Incident Closed." }));
+    })
+    .catch((err) => res.json({ error: err }));
 });
 
 module.exports = router;

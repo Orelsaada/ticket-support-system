@@ -1,5 +1,4 @@
-.user-incidents {
-  height: 100vh;
+body {
   background: #b8e1fc; /* Old browsers */
   background: -moz-linear-gradient(
     top,
@@ -35,4 +34,60 @@
     #bdf3fd 100%
   ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b8e1fc', endColorstr='#bdf3fd',GradientType=0 ); /* IE6-9 */
+}
+
+.incident {
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 5px 3px 5px #888888;
+  margin: 30px 0;
+  display: flex;
+}
+
+.left-side-incident {
+  width: 100px;
+  margin: 20px;
+}
+
+.middle-incident {
+  margin: 20px 75px 0 0;
+}
+
+.right-side-incident {
+  min-width: 15px;
+  margin-left: auto;
+  position: relative;
+}
+
+.close-incident {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0%;
+  right: -200%;
+  transform: translate(-50%, -50%);
+  margin-top: 45px;
+}
+
+i {
+  text-align: center;
+}
+
+.close-btn {
+  background-color: white;
+  border: none;
+  padding: 1.1rem;
+  border-radius: 10px;
+  color: red;
+  outline: none;
+}
+.close-btn:focus {
+  outline: none;
+}
+
+/* Make room for incident content */
+@media screen and (min-width: 770px) {
+  .middle-incident {
+    max-width: 75%;
+  }
 }

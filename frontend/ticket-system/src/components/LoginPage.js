@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
@@ -10,6 +10,28 @@ const LoginPage = () => {
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
   const history = useHistory();
 
+  // If token in localstorage, validate token and connect.
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios({
+        method: "post",
+        url: "http://localhost:5000/api/auth/isValidToken",
+        data: { token },
+      })
+        .then((res) => {
+          if (res.data == false) {
+            localStorage.removeItem("token");
+          } else {
+            setIsAuthenticated(true);
+            history.push("/my-incidents");
+          }
+        })
+        .catch((e) => console.log(e));
+    }
+  }, []);
+
+  // Handle form changes
   const handleChange = (e) => {
     setMyInputs({
       ...myInputs,
@@ -17,6 +39,7 @@ const LoginPage = () => {
     });
   };
 
+  // Handle login
   const handleSubmit = (e) => {
     e.preventDefault();
 

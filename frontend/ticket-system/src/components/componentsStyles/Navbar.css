@@ -1,0 +1,67 @@
+:root {
+  --background-color: #b8e1fc;
+  --nav-background-color: rgb(51, 51, 51);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background-color: var(--nav-background-color);
+  min-height: 3.5rem;
+}
+
+ul {
+  width: 100%;
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.brand-link {
+  padding-left: 10px;
+  color: white;
+}
+
+.brand-link h4 {
+  margin: 0 20px 5px 0;
+}
+
+.brand-link a:hover {
+  color: white;
+}
+
+.username {
+  color: white;
+  margin-left: auto;
+  margin-top: 7px;
+  padding: 10px;
+}
+
+.logout {
+  padding: 10px;
+}
+
+.links li {
+  margin: 5px;
+}
+
+nav a {
+  color: white;
+}
+
+nav a:hover {
+  text-decoration: none;
+  color: var(--background-color);
+}
+
+.logout-btn {
+  background-color: var(--nav-background-color);
+  color: white;
+  border: 1px solid white;
+  padding: 3px 6px;
+  font-size: 0.9rem;
+}
