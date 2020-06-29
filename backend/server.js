@@ -28,6 +28,7 @@ app.get("/", (req, res) => res.send("Main Page"));
 app.use("/api/register", require("./routes/api/register"));
 app.use("/api/auth", require("./routes/api/authenticate"));
 app.use("/api/incidents", require("./routes/api/incidents"));
+app.use("/api/permissions", require("./routes/api/permissions"));
 
 app.listen(port, () =>
   console.log(`Server is running at http://localhost:${port}.`)

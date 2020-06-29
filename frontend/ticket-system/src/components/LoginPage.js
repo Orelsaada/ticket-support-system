@@ -2,12 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
+import { UserContext } from "./UserContext";
 import "./componentsStyles/LoginPage.css";
 
 const LoginPage = () => {
   const [myInputs, setMyInputs] = useState({});
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
+  const [user, setUser] = useContext(UserContext);
   const history = useHistory();
 
   // If token in localstorage, validate token and connect.
@@ -57,16 +59,22 @@ const LoginPage = () => {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("user-id", res.data.user.id);
           setIsAuthenticated(true);
-          history.push("/my-incidents");
+          setUser(res.data.user);
+
+          if (res.data.user.role === "User") {
+            history.push("/my-incidents");
+          } else if (res.data.user.role == "Admin") {
+            history.push("/admin-incidents");
+          }
         }
       })
-      .catch((err) => setError("Failed to login, try again."));
+      .catch((err) => setError(err.response.data.msg));
   };
 
   return (
     <section className="login-section">
       <div className="main-div">
-        <p>Testing user: "token@user.com", password: 123456</p>
+        <p>Testing user: "test@test.com / admin@admin.com", password: 123456</p>
         {error && <p>{error}</p>}
         <div className="card-container">
           <h2 className="mt-4 mb-4 text-center">Login</h2>

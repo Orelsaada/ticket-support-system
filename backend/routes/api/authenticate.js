@@ -8,6 +8,7 @@ const User = require("../../models/user");
 const auth = require("../../middleware/auth");
 
 // POST /api/auth
+// Login and return token, name, email, id and role.
 router.post("/", (req, res) => {
   const { email, password } = req.body;
 
@@ -37,6 +38,7 @@ router.post("/", (req, res) => {
               id: user.id,
               name: user.name,
               email: user.email,
+              role: user.role,
             },
           });
         }
@@ -46,13 +48,16 @@ router.post("/", (req, res) => {
 });
 
 // GET /api/auth/user
+// Return user object without password (based on user id).
 router.get("/user", auth, (req, res) => {
   User.findById(req.user.id)
     .select("-password")
-    .then((user) => res.json(user));
+    .then((user) => res.json(user))
+    .catch((e) => res.json({ msg: "Could not find user based on token" }));
 });
 
-// POST /api/auth/isValidToken (Valid? user id : false)
+// POST /api/auth/isValidToken
+// If token is valid return user id , else false.
 router.post("/isValidToken", (req, res) => {
   try {
     const decoded = jwt.verify(req.body.token, process.env.jwtSecret);

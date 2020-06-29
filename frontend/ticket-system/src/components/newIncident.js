@@ -3,10 +3,12 @@ import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
+import { UserContext } from "./UserContext";
 import "./componentsStyles/newIncident.css";
 
 function NewIncident() {
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
+  const [user, setUser] = useContext(UserContext);
   const [myInputs, setMyInputs] = useState({});
   const [msg, setMsg] = useState("");
   const history = useHistory();
@@ -26,8 +28,9 @@ function NewIncident() {
 
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("user-id");
+    const userName = user.name;
     const { title, description } = myInputs;
-    const incident = { userId, title, description };
+    const incident = { userId, userName, title, description };
 
     axios({
       method: "post",

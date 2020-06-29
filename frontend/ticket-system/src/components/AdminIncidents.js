@@ -1,25 +1,22 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import { useHistory } from "react-router";
 import "./componentsStyles/UserIncidents.css";
 import { AuthContext } from "./AuthContext";
-import { UserContext } from "./UserContext";
 import CloseModal from "./Modal";
 
-function UserIncidents() {
+function AdminIncidents() {
   const [incidents, setIncidents] = useState([]);
   const [incidentId, setIncidentId] = useState("");
   const [error, setError] = useState([]);
   const [userName, setUserName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
-  const [user, setUser] = useContext(UserContext);
   const userId = localStorage.getItem("user-id");
   const token = localStorage.getItem("token");
-  const history = useHistory();
 
   // Request once to get username base on user id.
+  // If the user isn't admin redirect to login.
   useEffect(() => {
     axios({
       method: "get",
@@ -27,17 +24,19 @@ function UserIncidents() {
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {
+        if (res.data.role != "Admin") return <Redirect to="/" />;
         setUserName(res.data.name);
-        if (res.data.role == "Admin") history.push("/admin-incidents");
       })
-      .catch((err) => setError(...error, err.data));
+      .catch((err) => {
+        setError(...error, err.data);
+      });
   }, []);
 
-  // Request to get the incidents.
+  // Get All incidents
   useEffect(() => {
     axios({
       method: "get",
-      url: "http://localhost:5000/api/incidents",
+      url: "http://localhost:5000/api/incidents/admin",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => setIncidents(res.data.reverse()))
@@ -85,9 +84,13 @@ function UserIncidents() {
   return (
     <section className="user-incidents">
       <div className="container">
-        <h1>{error}</h1>
+        <h1>Dashboard</h1>
+        {error &&
+          error.map((err) => {
+            return <h1>{err.data}</h1>;
+          })}
+
         <h1>Hello {userName}</h1>
-        <h2> Your incidents </h2>
         {incidents.map((incident, index) => (
           <div key={index} className="incident">
             <div className="left-side-incident">
@@ -103,6 +106,7 @@ function UserIncidents() {
                 incident.createdAt.split("/")[0]
               }/${incident.createdAt.split("/")[2]}
               `}</h6>
+              <h6>Opened by: {incident.userName}</h6>
             </div>
 
             <div className="middle-incident">
@@ -146,4 +150,4 @@ function UserIncidents() {
   );
 }
 
-export default UserIncidents;
+export default AdminIncidents;

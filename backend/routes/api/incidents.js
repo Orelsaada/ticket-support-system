@@ -5,11 +5,12 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config({ path: "../../.env" });
 const auth = require("../../middleware/auth");
+const adminAuth = require("../../middleware/adminAuth");
 const Incident = require("../../models/incident");
 
 // POST /api/incidents/new
 router.post("/new", auth, (req, res) => {
-  const { userId, title, description } = req.body;
+  const { userId, userName, title, description } = req.body;
 
   // Validate there's user connected.
   if (!userId) return res.status(400).json({ msg: "Please login.." });
@@ -17,6 +18,7 @@ router.post("/new", auth, (req, res) => {
   // Create new incident.
   const incident = new Incident({
     userId,
+    userName,
     title,
     description,
   });
@@ -26,6 +28,13 @@ router.post("/new", auth, (req, res) => {
 // GET /api/incidents
 router.get("/", auth, (req, res) => {
   Incident.find({ userId: req.user.id })
+    .select("-__v")
+    .then((incidents) => res.json(incidents));
+});
+
+// GET /api/incidents/admin
+router.get("/admin", [auth, adminAuth], (req, res) => {
+  Incident.find()
     .select("-__v")
     .then((incidents) => res.json(incidents));
 });
