@@ -18,8 +18,7 @@ router.post("/update", [auth, adminAuth], (req, res) => {
   User.find({ name: req.body.user })
     .then((user) => {
       user.role = req.body.role;
-      user.save();
-      res.json({ msg: "User role updated." });
+      user.save(() => res.json({ msg: "User role updated." }));
     })
     .catch((e) => console.log(e));
 });
