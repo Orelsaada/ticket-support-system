@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
 dotenv.config();
+const path = require("path");
 
 // Middlewares
 const auth = require("./middleware/auth");
@@ -8,7 +9,7 @@ const cors = require("cors");
 // Set up express
 const express = require("express");
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
@@ -23,7 +24,13 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 mongoose.connection.once("open", () => console.log("MongoDB Connected!"));
 
-app.get("/", (req, res) => res.send("Main Page"));
+// Serve static assets if in production
+if (process.nextTick.NODE_ENV === "production") {
+  app.use(express.static("../frontend/ticket-system/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname));
+  });
+}
 
 app.use("/api/register", require("./routes/api/register"));
 app.use("/api/auth", require("./routes/api/authenticate"));
