@@ -14,8 +14,6 @@ const LoginPage = () => {
   const [user, setUser] = useContext(UserContext);
   const history = useHistory();
 
-  console.log("Port from login" + process.env.PORT);
-
   // If token in localstorage, validate token and connect.
   useEffect(() => {
     const token = localStorage.getItem("token");

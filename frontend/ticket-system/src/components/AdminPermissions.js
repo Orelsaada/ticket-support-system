@@ -14,7 +14,7 @@ const AdminPermissions = () => {
   useEffect(() => {
     axios({
       method: "get",
-      url: "http://localhost:5000/api/auth/user",
+      url: "/api/auth/user",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {
@@ -30,7 +30,7 @@ const AdminPermissions = () => {
   useEffect(() => {
     axios({
       method: "get",
-      url: "http://localhost:5000/api/permissions/users",
+      url: "/api/permissions/users",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {

@@ -27,7 +27,6 @@ function UserIncidents() {
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {
-        console.log("first useeffect " + res.data);
         setUserName(res.data.name);
         if (res.data.role == "Admin") history.push("/admin-incidents");
       })
@@ -42,7 +41,6 @@ function UserIncidents() {
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {
-        console.log("second useeffect " + res.data);
         setIncidents(res.data.reverse());
       })
       .catch((err) => setError(...error, err.data));
