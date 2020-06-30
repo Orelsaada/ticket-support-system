@@ -63,7 +63,7 @@ const AdminPermissions = () => {
       headers: { "Content-Type": "application/json", "x-auth-token": token },
       data: { user, role },
     })
-      .then((res) => alert(res))
+      .then((res) => alert(res.data.msg))
       .catch((e) => setMsg(e.response));
   };
 
