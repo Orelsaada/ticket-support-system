@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router";
-import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import { UserContext } from "./UserContext";
+import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config({ path: "../../../../backend/.env" });
 import "./componentsStyles/LoginPage.css";
 
 const LoginPage = () => {
