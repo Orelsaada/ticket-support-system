@@ -12,7 +12,7 @@ const LoginPage = () => {
   const [user, setUser] = useContext(UserContext);
   const history = useHistory();
 
-  const devUrl = `http://localhost:${process.env.PORT || 5000}`;
+  // const devUrl = `http://localhost:${process.env.PORT || 5000}`;
 
   // If token in localstorage, validate token and connect.
   useEffect(() => {
@@ -20,7 +20,7 @@ const LoginPage = () => {
     if (token) {
       axios({
         method: "post",
-        url: `${devUrl}/api/auth/isValidToken`,
+        url: `/api/auth/isValidToken`,
         data: { token },
       })
         .then((res) => {
@@ -46,13 +46,12 @@ const LoginPage = () => {
   // Handle login
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(devUrl);
     const user = { email: myInputs.email, password: myInputs.password };
     setError("");
 
     axios({
       method: "post",
-      url: `${devUrl}/api/auth`,
+      url: `/api/auth`,
       data: user,
     })
       .then((res) => {
