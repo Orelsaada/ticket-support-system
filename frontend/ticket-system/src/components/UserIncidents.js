@@ -23,7 +23,7 @@ function UserIncidents() {
   useEffect(() => {
     axios({
       method: "get",
-      url: "/api/auth/user",
+      url: "http://localhost:56524/api/auth/user",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {

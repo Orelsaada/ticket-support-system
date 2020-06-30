@@ -9,7 +9,7 @@ const cors = require("cors");
 // Set up express
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 56524;
 
 // Middleware
 app.use(express.json());
