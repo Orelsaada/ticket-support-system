@@ -30,7 +30,7 @@ function UserIncidents() {
         setUserName(res.data.name);
         if (res.data.role == "Admin") history.push("/admin-incidents");
       })
-      .catch((err) => setError(...error, err.data));
+      .catch((err) => console.log(err));
   }, []);
 
   // Request to get the incidents.
