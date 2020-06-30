@@ -26,10 +26,12 @@ mongoose.connection.once("open", () => console.log("MongoDB Connected!"));
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("../frontend/ticket-system/build"));
+  app.use(
+    express.static(path.join(__dirname, "../frontend/ticket-system/build"))
+  );
   app.get("*", (req, res) => {
     res.sendFile(
-      path.join(
+      path.resolve(
         __dirname,
         "..",
         "frontend",
