@@ -25,7 +25,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 mongoose.connection.once("open", () => console.log("MongoDB Connected!"));
 
 // Serve static assets if in production
-if (process.nextTick.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
   app.use(express.static("../frontend/ticket-system/build"));
   app.get("*", (req, res) => {
     res.sendFile(
@@ -46,6 +46,16 @@ app.use("/api/auth", require("./routes/api/authenticate"));
 app.use("/api/incidents", require("./routes/api/incidents"));
 app.use("/api/permissions", require("./routes/api/permissions"));
 
-app.listen(port, () =>
-  console.log(`Server is running at http://localhost:${port}.`)
-);
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}.`);
+  console.log(
+    path.resolve(
+      __dirname,
+      "..",
+      "frontend",
+      "ticket-system",
+      "build",
+      "index.html"
+    )
+  );
+});
