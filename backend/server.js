@@ -28,7 +28,16 @@ mongoose.connection.once("open", () => console.log("MongoDB Connected!"));
 if (process.nextTick.NODE_ENV === "production") {
   app.use(express.static("../frontend/ticket-system/build"));
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname));
+    res.sendFile(
+      path.resolve(
+        __dirname,
+        "..",
+        "frontend",
+        "ticket-system",
+        "build",
+        "index.html"
+      )
+    );
   });
 }
 
