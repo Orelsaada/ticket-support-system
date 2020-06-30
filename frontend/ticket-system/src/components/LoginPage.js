@@ -46,7 +46,7 @@ const LoginPage = () => {
   // Handle login
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    console.log(devUrl);
     const user = { email: myInputs.email, password: myInputs.password };
     setError("");
 
