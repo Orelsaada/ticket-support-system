@@ -12,13 +12,18 @@ const LoginPage = () => {
   const [user, setUser] = useContext(UserContext);
   const history = useHistory();
 
+  const devUrl = "http://localhost:5000";
+  if (process.env.NODE_ENV === "production") {
+    devUrl = `https://service-system.herokuapp.com:${process.env.PORT}`;
+  }
+
   // If token in localstorage, validate token and connect.
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       axios({
         method: "post",
-        url: "http://localhost:5000/api/auth/isValidToken",
+        url: `${devUrl}/api/auth/isValidToken`,
         data: { token },
       })
         .then((res) => {
@@ -50,7 +55,7 @@ const LoginPage = () => {
 
     axios({
       method: "post",
-      url: "http://localhost:5000/api/auth",
+      url: `${devUrl}/api/auth`,
       data: user,
     })
       .then((res) => {
