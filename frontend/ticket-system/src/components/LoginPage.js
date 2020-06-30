@@ -12,8 +12,6 @@ const LoginPage = () => {
   const [user, setUser] = useContext(UserContext);
   const history = useHistory();
 
-  // const devUrl = `http://localhost:${process.env.PORT || 5000}`;
-
   // If token in localstorage, validate token and connect.
   useEffect(() => {
     const token = localStorage.getItem("token");
