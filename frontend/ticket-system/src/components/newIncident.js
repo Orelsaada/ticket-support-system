@@ -34,7 +34,7 @@ function NewIncident() {
 
     axios({
       method: "post",
-      url: "http://localhost:5000/api/incidents/new",
+      url: "/api/incidents/new",
       data: incident,
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })

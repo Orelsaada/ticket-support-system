@@ -20,7 +20,7 @@ function AdminIncidents() {
   useEffect(() => {
     axios({
       method: "get",
-      url: "http://localhost:5000/api/auth/user",
+      url: "/api/auth/user",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {
@@ -36,7 +36,7 @@ function AdminIncidents() {
   useEffect(() => {
     axios({
       method: "get",
-      url: "http://localhost:5000/api/incidents/admin",
+      url: "/api/incidents/admin",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => setIncidents(res.data.reverse()))
@@ -50,7 +50,7 @@ function AdminIncidents() {
   const removeIncident = (id) => {
     axios({
       method: "delete",
-      url: "http://localhost:5000/api/incidents/delete",
+      url: "/api/incidents/delete",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
       data: { id },
     })
@@ -71,7 +71,7 @@ function AdminIncidents() {
     setShowModal(false);
     axios({
       method: "post",
-      url: "http://localhost:5000/api/incidents/close",
+      url: "/api/incidents/close",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
       data: { id },
     })
