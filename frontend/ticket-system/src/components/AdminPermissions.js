@@ -6,6 +6,8 @@ import { Redirect } from "react-router-dom";
 const AdminPermissions = () => {
   const [users, setUsers] = useState([]);
   const [userName, setUserName] = useState("");
+  const [msg, setMsg] = useState("");
+  const [myInputs, setMyInputs] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
   const token = localStorage.getItem("token");
 
@@ -42,14 +44,42 @@ const AdminPermissions = () => {
   // If user isn't login redirect to login
   if (!isAuthenticated) return <Redirect to="/" />;
 
+  // Handle the form changes
+  const handleChange = (e) => {
+    setMyInputs({
+      ...myInputs,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Changing the user role
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const { user, role } = myInputs;
+    axios({
+      method: "post",
+      url: "/permissions/update",
+      headers: { "Content-Type": "application/json", "x-auth-token": token },
+      data: { user, role },
+    })
+      .then((res) => alert(res))
+      .catch((e) => setMsg(e.response));
+  };
+
   return (
     <section className="permissions">
       <div className="container">
         <h1>Permissions View</h1>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="user">User</label>
-            <select className="form-control" id="user">
+            <select
+              className="form-control"
+              id="user"
+              name="user"
+              onChange={handleChange}
+            >
               {users.map((user, index) => {
                 return <option key={index}>{user.name}</option>;
               })}
@@ -58,8 +88,13 @@ const AdminPermissions = () => {
 
           <div className="form-group">
             <label htmlFor="role">Role</label>
-            <select className="form-control" id="role">
-              <option>Add dynamic roles here</option>
+            <select
+              className="form-control"
+              id="role"
+              name="role"
+              onChange={handleChange}
+            >
+              <option>Admin</option>
             </select>
           </div>
 

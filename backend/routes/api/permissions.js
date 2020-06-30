@@ -13,4 +13,15 @@ router.get("/users", [auth, adminAuth], (req, res) => {
     .catch((e) => console.log(e));
 });
 
+// Update user role
+router.post("/update", [auth, adminAuth], (req, res) => {
+  User.find({ name: req.body.user })
+    .then((user) => {
+      user.role = req.body.role;
+      user.save();
+      res.json({ msg: "User role updated." });
+    })
+    .catch((e) => console.log(e));
+});
+
 module.exports = router;
