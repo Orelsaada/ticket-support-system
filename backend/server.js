@@ -48,14 +48,4 @@ app.use("/api/permissions", require("./routes/api/permissions"));
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}.`);
-  console.log(
-    path.resolve(
-      __dirname,
-      "..",
-      "frontend",
-      "ticket-system",
-      "build",
-      "index.html"
-    )
-  );
 });
