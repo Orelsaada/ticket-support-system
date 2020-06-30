@@ -4,8 +4,8 @@ import { AuthContext } from "./AuthContext";
 import { UserContext } from "./UserContext";
 import axios from "axios";
 import dotenv from "dotenv";
-dotenv.config({ path: "../../../../backend/.env" });
 import "./componentsStyles/LoginPage.css";
+dotenv.config({ path: "../../../../backend/.env" });
 
 const LoginPage = () => {
   const [myInputs, setMyInputs] = useState({});
