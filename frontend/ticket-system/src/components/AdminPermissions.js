@@ -59,7 +59,7 @@ const AdminPermissions = () => {
     const { user, role } = myInputs;
     axios({
       method: "post",
-      url: "/permissions/update",
+      url: "/api/permissions/update",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
       data: { user, role },
     })
