@@ -7,7 +7,7 @@ const AdminPermissions = () => {
   const [users, setUsers] = useState([]);
   const [userName, setUserName] = useState("");
   const [msg, setMsg] = useState("");
-  const [myInputs, setMyInputs] = useState({});
+  const [myInputs, setMyInputs] = useState({ role: "Admin" });
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
   const token = localStorage.getItem("token");
 
@@ -64,7 +64,7 @@ const AdminPermissions = () => {
       data: { user, role },
     })
       .then((res) => alert(res.data.msg))
-      .catch((e) => alert(e.response));
+      .catch((e) => console.log(e));
   };
 
   return (
