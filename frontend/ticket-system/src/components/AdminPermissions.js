@@ -64,7 +64,7 @@ const AdminPermissions = () => {
       data: { user, role },
     })
       .then((res) => alert(res.data.msg))
-      .catch((e) => setMsg(e.response));
+      .catch((e) => alert(e.response));
   };
 
   return (
