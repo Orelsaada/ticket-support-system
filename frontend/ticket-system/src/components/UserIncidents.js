@@ -23,7 +23,7 @@ function UserIncidents() {
   useEffect(() => {
     axios({
       method: "get",
-      url: "https://service-system.herokuapp.com/api/auth/user",
+      url: "/api/auth/user",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {
