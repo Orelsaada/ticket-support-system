@@ -12,10 +12,7 @@ const LoginPage = () => {
   const [user, setUser] = useContext(UserContext);
   const history = useHistory();
 
-  const devUrl = "http://localhost:5000";
-  if (process.env.NODE_ENV === "production") {
-    devUrl = `https://service-system.herokuapp.com:${process.env.PORT}`;
-  }
+  const devUrl = `http://localhost:${process.env.PORT || 5000}`;
 
   // If token in localstorage, validate token and connect.
   useEffect(() => {
