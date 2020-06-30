@@ -9,7 +9,7 @@ const cors = require("cors");
 // Set up express
 const express = require("express");
 const app = express();
-const port = 56524;
+const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
@@ -23,6 +23,11 @@ mongoose.connect(process.env.MONGODB_URI, {
   useCreateIndex: true,
 });
 mongoose.connection.once("open", () => console.log("MongoDB Connected!"));
+
+app.use("/api/register", require("./routes/api/register"));
+app.use("/api/auth", require("./routes/api/authenticate"));
+app.use("/api/incidents", require("./routes/api/incidents"));
+app.use("/api/permissions", require("./routes/api/permissions"));
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {
@@ -42,11 +47,6 @@ if (process.env.NODE_ENV === "production") {
     );
   });
 }
-
-app.use("/api/register", require("./routes/api/register"));
-app.use("/api/auth", require("./routes/api/authenticate"));
-app.use("/api/incidents", require("./routes/api/incidents"));
-app.use("/api/permissions", require("./routes/api/permissions"));
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}.`);
