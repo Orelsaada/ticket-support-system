@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"npm run server\" \"cd ../frontend/ticket-system && npm start\"",
-    "server": "nodemon server.js",
+    "dev": "concurrently \"npm run server\" \"cd frontend/ticket-system && npm start\"",
+    "server": "nodemon backend/server.js",
     "start": "node ./backend/server.js",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend/ticket-system && npm run build --prefix frontend/ticket-system"
   },

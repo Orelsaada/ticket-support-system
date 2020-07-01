@@ -37,7 +37,6 @@ const AdminPermissions = () => {
     })
       .then((res) => {
         setUsers(res.data.filter((user) => user.name != userName));
-        setMyInputs({ user: users[0].name });
       })
       .catch((e) => console.log(e));
   }, [userName]);

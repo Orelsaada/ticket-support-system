@@ -10,7 +10,7 @@ const Incident = require("../../models/incident");
 
 // POST /api/incidents/new
 router.post("/new", auth, (req, res) => {
-  const { userId, userName, title, description } = req.body;
+  const { userId, userName, title, description, sd } = req.body;
 
   // Validate there's user connected.
   if (!userId) return res.status(400).json({ msg: "Please login.." });
@@ -21,6 +21,7 @@ router.post("/new", auth, (req, res) => {
     userName,
     title,
     description,
+    sd,
   });
   incident.save().then(res.json({ msg: "Incident created successfuly." }));
 });
@@ -30,6 +31,13 @@ router.get("/", auth, (req, res) => {
   Incident.find({ userId: req.user.id })
     .select("-__v")
     .then((incidents) => res.json(incidents));
+});
+
+// GET /api/incidents/sd
+router.get("/sd", auth, (req, res) => {
+  Incident.find().then((incidents) => {
+    res.json({ totalIncidents: incidents.length });
+  });
 });
 
 // GET /api/incidents/admin

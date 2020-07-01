@@ -10,7 +10,7 @@ function NewIncident() {
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
   const [user, setUser] = useContext(UserContext);
   const [myInputs, setMyInputs] = useState({});
-  const [msg, setMsg] = useState("");
+  const [newIncident, setNewIncident] = useState({});
   const history = useHistory();
 
   // If user isn't login redirect to login
@@ -30,12 +30,29 @@ function NewIncident() {
     const userId = localStorage.getItem("user-id");
     const userName = user.name;
     const { title, description } = myInputs;
-    const incident = { userId, userName, title, description };
 
+    // Get SD from DB based on total incidents and created the new incident object.
+    axios({
+      method: "get",
+      url: "/api/incidents/sd",
+      headers: { "Content-Type": "application/json", "x-auth-token": token },
+    })
+      .then((res) => {
+        setNewIncident({
+          userId,
+          userName,
+          title,
+          description,
+          sd: (res.data.totalIncidents + 1).toString(),
+        });
+      })
+      .catch((e) => console.log(e));
+
+    // POST request to the backend to create new incident.
     axios({
       method: "post",
       url: "/api/incidents/new",
-      data: incident,
+      data: newIncident,
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {

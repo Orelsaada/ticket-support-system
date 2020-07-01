@@ -94,7 +94,7 @@ function AdminIncidents() {
         {incidents.map((incident, index) => (
           <div key={index} className="incident">
             <div className="left-side-incident">
-              <h6>SD102546(TO-CHANGE)</h6>
+              <h6>SD{incident.sd}</h6>
               <h6
                 className={`badge ${
                   incident.status == "Open" ? "badge-success" : "badge-danger"
