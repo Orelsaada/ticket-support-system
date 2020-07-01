@@ -63,6 +63,7 @@ const AdminPermissions = () => {
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((user) => {
+        if (!user.data) alert("Could not find that user.");
         setResult(user.data);
       })
       .catch((e) => console.log(e));
@@ -132,6 +133,8 @@ const AdminPermissions = () => {
             </table>
           )}
         </div>
+
+        <hr />
 
         <div className="change-permission-div">
           <h1>Change Permissions</h1>

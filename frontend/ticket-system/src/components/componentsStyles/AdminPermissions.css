@@ -1,6 +1,9 @@
+.permissions {
+  padding: 0 30%;
+}
+
 .search-user-div,
 .change-form {
-  border: 1px dotted black;
   padding: 1.1rem;
 }
 

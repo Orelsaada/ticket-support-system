@@ -47,3 +47,10 @@
   border-radius: 5px;
   box-shadow: 5px 5px 18px #888888;
 }
+
+@media screen and (max-width: 700px) {
+  .main-div {
+    position: relative;
+    width: 60%;
+  }
+}
