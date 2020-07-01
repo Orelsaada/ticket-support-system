@@ -10,12 +10,15 @@ function NewIncident() {
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
   const [user, setUser] = useContext(UserContext);
   const [myInputs, setMyInputs] = useState({});
-  const [newIncident, setNewIncident] = useState({});
   const history = useHistory();
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("user-id");
+  let newIncident = {};
 
   // If user isn't login redirect to login
   if (!isAuthenticated) return <Redirect to="/" />;
 
+  // Handle form changes
   const handleChange = (e) => {
     setMyInputs({
       ...myInputs,
@@ -23,31 +26,34 @@ function NewIncident() {
     });
   };
 
+  // Get sd from backend, Post new incident.
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("user-id");
     const userName = user.name;
     const { title, description } = myInputs;
 
-    // Get SD from DB based on total incidents and created the new incident object.
+    // Get SD from DB based on total incidents and create the new incident object.
     axios({
       method: "get",
       url: "/api/incidents/sd",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
       .then((res) => {
-        setNewIncident({
+        newIncident = {
           userId,
           userName,
           title,
           description,
-          sd: (res.data.totalIncidents + 1).toString(),
-        });
+          sd: res.data.totalIncidents + 1,
+        };
+        createIncident(newIncident);
       })
       .catch((e) => console.log(e));
+  };
 
+  // Function that gets call from axios sd response to actually create the new incident at backend.
+  const createIncident = (newIncident) => {
     // POST request to the backend to create new incident.
     axios({
       method: "post",
