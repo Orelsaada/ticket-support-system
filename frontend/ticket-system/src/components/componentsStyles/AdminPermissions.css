@@ -1,4 +1,13 @@
-.search-user-div {
+.search-user-div,
+.change-form {
   border: 1px dotted black;
   padding: 1.1rem;
+}
+
+.results {
+  box-shadow: 5px 5px 18px #888888;
+}
+
+.change-permission-div {
+  margin-top: 50px;
 }

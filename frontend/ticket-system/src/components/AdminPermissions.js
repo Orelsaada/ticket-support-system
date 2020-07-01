@@ -89,7 +89,7 @@ const AdminPermissions = () => {
   return (
     <section className="permissions">
       <div className="container">
-        <h1>Permissions View</h1>
+        <h1>View Permissions</h1>
 
         <div className="search-user-div">
           <form onSubmit={findUser}>
@@ -114,16 +114,18 @@ const AdminPermissions = () => {
 
           {/* Results table will be shown upon results. */}
           {result && (
-            <table className="table table-striped results">
+            <table className="table results">
               <thead>
                 <tr>
                   <th scope="col">User</th>
+                  <th scope="col">Email</th>
                   <th scope="col">Role</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>{result.name}</td>
+                  <td>{result.email}</td>
                   <td>{result.role}</td>
                 </tr>
               </tbody>
@@ -131,38 +133,41 @@ const AdminPermissions = () => {
           )}
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="user">User</label>
-            <select
-              className="form-control"
-              id="user"
-              name="user"
-              onChange={handleChange}
-            >
-              {users.map((user, index) => {
-                return <option key={index}>{user.name}</option>;
-              })}
-            </select>
-          </div>
+        <div className="change-permission-div">
+          <h1>Change Permissions</h1>
+          <form onSubmit={handleSubmit} className="change-form">
+            <div className="form-group">
+              <label htmlFor="user">User</label>
+              <select
+                className="form-control"
+                id="user"
+                name="user"
+                onChange={handleChange}
+              >
+                {users.map((user, index) => {
+                  return <option key={index}>{user.name}</option>;
+                })}
+              </select>
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="role">Role</label>
-            <select
-              className="form-control"
-              id="role"
-              name="role"
-              onChange={handleChange}
-            >
-              <option>Admin</option>
-              <option>User</option>
-            </select>
-          </div>
+            <div className="form-group">
+              <label htmlFor="role">Role</label>
+              <select
+                className="form-control"
+                id="role"
+                name="role"
+                onChange={handleChange}
+              >
+                <option>Admin</option>
+                <option>User</option>
+              </select>
+            </div>
 
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
-        </form>
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </form>
+        </div>
       </div>
     </section>
   );
