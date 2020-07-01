@@ -13,12 +13,23 @@ router.get("/users", [auth, adminAuth], (req, res) => {
     .catch((e) => console.log(e));
 });
 
+// Return one user without password field if auth as admin.
+router.get("/user", [auth, adminAuth], (req, res) => {
+  User.findOne({ name: req.query.name })
+    .select("-password")
+    .then((user) => res.json(user))
+    .catch((e) => console.log(e));
+});
+
 // Update user role
 router.post("/update", [auth, adminAuth], (req, res) => {
-  User.find({ name: req.body.user })
-    .then((user) => {
-      user.role = req.body.role;
-      user.save(() => res.json({ msg: "User role updated." }));
+  User.findOneAndUpdate(
+    { name: req.body.user },
+    { role: req.body.role },
+    { useFindAndModify: false }
+  )
+    .then(() => {
+      res.json({ msg: "User role updated." });
     })
     .catch((e) => console.log(e));
 });

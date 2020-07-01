@@ -2,12 +2,13 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import { Redirect } from "react-router-dom";
+import "./componentsStyles/AdminPermissions.css";
 
 const AdminPermissions = () => {
   const [users, setUsers] = useState([]);
   const [userName, setUserName] = useState("");
-  const [msg, setMsg] = useState("");
-  const [myInputs, setMyInputs] = useState({ role: "Admin" });
+  const [result, setResult] = useState();
+  const [myInputs, setMyInputs] = useState({ user: null, role: "Admin" });
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
   const token = localStorage.getItem("token");
 
@@ -52,9 +53,27 @@ const AdminPermissions = () => {
     });
   };
 
+  // Find user and his role.
+  const findUser = (e) => {
+    e.preventDefault();
+
+    axios({
+      method: "get",
+      url: `/api/permissions/user?name=${myInputs.searchUser}`,
+      headers: { "Content-Type": "application/json", "x-auth-token": token },
+    })
+      .then((user) => {
+        setResult(user.data);
+      })
+      .catch((e) => console.log(e));
+  };
+
   // Changing the user role
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // if user field didn't changed - set input as first username.
+    if (!myInputs.user) myInputs.user = users[0].name;
 
     const { user, role } = myInputs;
     axios({
@@ -71,6 +90,47 @@ const AdminPermissions = () => {
     <section className="permissions">
       <div className="container">
         <h1>Permissions View</h1>
+
+        <div className="search-user-div">
+          <form onSubmit={findUser}>
+            <div className="form-group">
+              <label htmlFor="searchUser">Search User (case-sensitive)</label>
+              <input
+                type="text"
+                id="searchUser"
+                name="searchUser"
+                className="form-control"
+                onChange={handleChange}
+              ></input>
+            </div>
+            <input
+              type="submit"
+              value="Search"
+              className="btn btn-primary"
+            ></input>
+          </form>
+
+          <br />
+
+          {/* Results table will be shown upon results. */}
+          {result && (
+            <table className="table table-striped results">
+              <thead>
+                <tr>
+                  <th scope="col">User</th>
+                  <th scope="col">Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{result.name}</td>
+                  <td>{result.role}</td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="user">User</label>
