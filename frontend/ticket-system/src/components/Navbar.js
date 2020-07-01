@@ -43,7 +43,9 @@ const CustomNavbar = () => {
       <ul>
         <li>
           <div className="brand-link">
-            <NavLink to="/my-incidents">
+            <NavLink
+              to={user.role == "User" ? "/my-incidents" : "/admin-incidents"}
+            >
               <h4>Service Manager</h4>
             </NavLink>
           </div>
