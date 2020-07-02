@@ -1,18 +1,19 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import "./componentsStyles/UserIncidents.css";
+import "./componentsStyles/AdminIncidents.css";
 import { AuthContext } from "./AuthContext";
-import CloseModal from "./Modal";
+import { get } from "mongoose";
 
 function AdminIncidents() {
+  const [filters, setFilters] = useState({ status: "Open", user: "" });
   const [incidents, setIncidents] = useState([]);
-  const [incidentId, setIncidentId] = useState("");
+  const [filteredIncidents, setFilteredIncidents] = useState([]);
+  const [allIncidents, setAllIncidents] = useState([]);
   const [error, setError] = useState([]);
   const [userName, setUserName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useContext(AuthContext);
-  const userId = localStorage.getItem("user-id");
   const token = localStorage.getItem("token");
 
   // Request once to get username base on user id.
@@ -32,53 +33,53 @@ function AdminIncidents() {
       });
   }, []);
 
-  // Get All incidents
+  // Get All incidents function
+  const getIncidentsAndFilter = () => {
+    axios({
+      method: "get",
+      url: "/api/incidents/admin",
+      headers: { "Content-Type": "application/json", "x-auth-token": token },
+    })
+      .then((res) => {
+        setAllIncidents(res.data.reverse());
+      })
+      .catch((err) => setError(...error, err.data));
+  };
+
+  // First time get all incidents and first filter by Open.
   useEffect(() => {
     axios({
       method: "get",
       url: "/api/incidents/admin",
       headers: { "Content-Type": "application/json", "x-auth-token": token },
     })
-      .then((res) => setIncidents(res.data.reverse()))
+      .then((res) => {
+        setAllIncidents(res.data.reverse());
+        setIncidents(res.data.filter((inc) => inc.status === "Open"));
+      })
       .catch((err) => setError(...error, err.data));
-  }, [incidents]);
+  }, []);
+
+  // Get all incidents on every status change.
+  useEffect(() => {}, [filters.status]);
+
+  // Filter incidents based on active filters.
+  useEffect(() => {
+    getIncidentsAndFilter();
+    setIncidents(
+      allIncidents.filter(
+        (inc) => inc.status === filters.status && inc.userName == filters.user
+      )
+    );
+    if (!filters.user)
+      setIncidents(allIncidents.filter((inc) => inc.status === filters.status));
+  }, [filters]);
 
   // If user isn't login redirect to login
   if (!isAuthenticated) return <Redirect to="/" />;
 
-  // Remove Incident(Not Used)
-  const removeIncident = (id) => {
-    axios({
-      method: "delete",
-      url: "/api/incidents/delete",
-      headers: { "Content-Type": "application/json", "x-auth-token": token },
-      data: { id },
-    })
-      .then((res) => {
-        alert(res.data.msg);
-        setIncidents(incidents.filter((incident) => incident._id != id));
-      })
-      .catch((err) => console.log(err));
-  };
-
-  // Close the modal of closing incident.
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  // Close incident on modal.
-  const acceptModal = (id) => {
-    setShowModal(false);
-    axios({
-      method: "post",
-      url: "/api/incidents/close",
-      headers: { "Content-Type": "application/json", "x-auth-token": token },
-      data: { id },
-    })
-      .then((res) => {
-        alert(res.data.msg);
-      })
-      .catch((err) => console.log(err));
+  const filterChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
   return (
@@ -91,63 +92,87 @@ function AdminIncidents() {
           })}
 
         <h1>Hello {userName}</h1>
-        {incidents.map((incident, index) => (
-          <div key={index} className="incident">
-            <div className="left-side-incident">
-              <h6>SD{incident.sd}</h6>
-              <h6
-                className={`badge ${
-                  incident.status == "Open" ? "badge-success" : "badge-danger"
-                }`}
-              >
-                {incident.status}
-              </h6>
-              <h6>{`${incident.createdAt.split("/")[1]}/${
-                incident.createdAt.split("/")[0]
-              }/${incident.createdAt.split("/")[2]}
-              `}</h6>
-              <h6>Opened by: {incident.userName}</h6>
-            </div>
 
-            <div className="middle-incident">
-              <h5>
-                <strong> {incident.title}</strong>
-              </h5>
-              <p>{incident.description}</p>
-            </div>
-
-            {/* Show "Close" button only if the incident isn't closed. */}
-            {incident.status != "Closed" ? (
-              <div className="right-side-incident">
-                <div className="close-incident">
-                  <button
-                    className="close-btn"
-                    onClick={() => {
-                      setShowModal(true);
-                      setIncidentId(incident._id);
-                    }}
+        <div className="table-div">
+          <div className="filters">
+            <h6>Filtered by:</h6>
+            <form>
+              <div className="form-group form-row">
+                <div className="col-sm-2">
+                  <label htmlFor="status">Status</label>
+                  <select
+                    id="status"
+                    name="status"
+                    className="form-control"
+                    onChange={filterChange}
                   >
-                    <i className="fa fa-check-square-o" aria-hidden="true"></i>
-                    Close
-                  </button>
+                    <option>Open</option>
+                    <option>Closed</option>
+                  </select>
                 </div>
-
-                <CloseModal
-                  open={showModal}
-                  closeModal={closeModal}
-                  acceptModal={() => {
-                    acceptModal(incidentId);
-                  }}
-                />
+                <div className="col-sm-2">
+                  <label htmlFor="user">User (case-sensitive))</label>
+                  <input
+                    type="text"
+                    id="user"
+                    name="user"
+                    className="form-control"
+                    placeholder="All"
+                    onChange={filterChange}
+                  ></input>
+                </div>
               </div>
-            ) : (
-              ""
-            )}
+            </form>
           </div>
-        ))}
+
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">SD</th>
+                <th scope="col">User</th>
+                <th scope="col">Title</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {incidents.map((incident, index) => {
+                return (
+                  <tr key={index}>
+                    <td>SD{incident.sd}</td>
+                    <td>{incident.userName}</td>
+                    <td>{incident.title}</td>
+                    <td>{dateFormat(incident)}</td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          incident.status == "Open"
+                            ? "badge-success"
+                            : "badge-danger"
+                        }`}
+                      >
+                        {" "}
+                        {incident.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   );
 }
+
+const dateFormat = (incident) => {
+  const date = `${incident.createdAt.split("/")[1]}/${
+    incident.createdAt.split("/")[0]
+  }/${incident.createdAt.split("/")[2]}
+  `;
+
+  return date;
+};
 
 export default AdminIncidents;
