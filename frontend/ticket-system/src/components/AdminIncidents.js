@@ -94,10 +94,10 @@ function AdminIncidents() {
         <h1>Hello {userName}</h1>
 
         <div className="table-div">
-          <div className="filters">
+          <div className="filters ">
             <h6>Filtered by:</h6>
             <form>
-              <div className="form-group form-row">
+              <div className="form-group form-row align-items-end">
                 <div className="col-sm-2">
                   <label htmlFor="status">Status</label>
                   <select
