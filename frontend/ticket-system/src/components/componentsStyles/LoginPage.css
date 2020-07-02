@@ -51,6 +51,13 @@
 @media screen and (max-width: 700px) {
   .main-div {
     position: relative;
-    width: 60%;
+    padding: 1rem;
+  }
+  p {
+    display: none;
+  }
+
+  .card-container {
+    font-size: 0.8rem;
   }
 }
